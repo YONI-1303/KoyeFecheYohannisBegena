@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="am">
+
+<head>
+    <meta charset="UTF-8">
+<link
+    rel="manifest"
+    href="./manifest.webmanifest"
+>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#07130e"
+    >
+
+    <title>
+        ኮዬ ፈጬ ዮሃንስ — የበገና ትምህርት
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="./styles.css?v=201"
+    >
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+</head>
+
+
+<body>
+
+
+<!-- ================================
+     LOGIN PAGE
+================================= -->
+
+<div
+    id="login-page"
+    class="login-page"
+>
+
+    <div class="login-card">
+
+        <div class="login-logo">
+            🎵
+        </div>
+
+        <h1>
+            Koye Feche Yohanis
+        </h1>
+
+        <p class="login-subtitle">
+            Begena Learning Center
+        </p>
+
+
+       <form id="login-form">
+
+    <label for="login-student-id">
+        Student ID / Username
+    </label>
+
+    <input
+        id="login-student-id"
+        type="text"
+        placeholder="e.g. kfy-1234"
+        autocomplete="username"
+        autocapitalize="none"
+        spellcheck="false"
+        required
+    />
+
+    <label for="login-password">
+        Password
+    </label>
+
+    <input
+        id="login-password"
+        type="password"
+        placeholder="Enter your password"
+        autocomplete="current-password"
+        required
+    />
+
+    <button
+        type="submit"
+        class="login-button"
+    >
+        Sign In
+    </button>
+
+    <p
+        id="login-error"
+        class="login-error"
+    ></p>
+
+</form>
+
+
+    </div>
+
+</div>
+
+
+<!-- ================================
+     APP SHELL
+================================= -->
+
+<div
+    id="app-shell"
+    class="app-shell"
+    style="display: none;"
+>
+
+
+    <!-- ================================
+         DESKTOP SIDEBAR
+    ================================= -->
+
+    <aside class="desktop-sidebar">
+
+
+        <div class="brand">
+
+            <div class="brand-cross">
+                ✝
+            </div>
+
+            <div>
+
+                <h2>
+                    ኮዬ ፈጬ ዮሃንስ
+                </h2>
+
+                <span>
+                    የበገና ትምህርት
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="role-switch">
+
+            <button
+                type="button"
+                class="role-button active"
+                data-role="student"
+            >
+                👨‍🎓 ተማሪ
+            </button>
+
+            <button
+                type="button"
+                class="role-button"
+                data-role="mentor"
+            >
+                👩‍🏫 አስተማሪ
+            </button>
+
+        </div>
+
+
+        <nav id="desktop-nav"></nav>
+
+
+    <div class="offline-status">
+
+        <span class="online-dot"></span>
+
+        Offline Ready
+
+    </div>
+
+    <button
+        id="logout-button"
+        class="logout-button"
+        type="button"
+    >
+        <span class="logout-icon">↪</span>
+        <span>Logout</span>
+    </button>
+
+</aside>
+
+
+    <!-- ================================
+         MAIN
+    ================================= -->
+
+    <main class="main">
+
+
+        <header class="topbar">
+
+
+            <button
+                type="button"
+                id="menu-button"
+                class="menu-button"
+                aria-label="Open menu"
+            >
+                ☰
+            </button>
+
+
+            <div class="page-heading">
+
+                <div class="church-label">
+                    KOYE FECHE YOHANIS CHURCH
+                </div>
+
+                <h1 id="page-title">
+                    መነሻ
+                </h1>
+
+            </div>
+
+
+            <div class="top-actions">
+
+
+                <button
+                    type="button"
+                    class="icon-button"
+                    id="language-button"
+                >
+                    EN
+                </button>
+
+
+                <button
+                    type="button"
+                    class="icon-button"
+                    id="notification-button"
+                >
+                    🔔
+                </button>
+
+
+                <div class="profile-circle">
+                    Y
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <section id="page-content"></section>
+
+
+    </main>
+
+</div>
+
+
+<!-- ================================
+     MOBILE DRAWER
+================================= -->
+
+<div
+    id="drawer-overlay"
+    class="drawer-overlay"
+></div>
+
+
+<aside
+    id="mobile-drawer"
+    class="mobile-drawer"
+    aria-hidden="true"
+>
+
+
+    <div class="drawer-header">
+
+
+        <div class="brand">
+
+            <div class="brand-cross">
+                ✝
+            </div>
+
+            <div>
+
+                <h2>
+                    ኮዬ ፈጬ ዮሃንስ
+                </h2>
+
+                <span>
+                    የበገና ትምህርት
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="icon-button"
+            id="close-drawer"
+        >
+            ✕
+        </button>
+
+    </div>
+
+
+    <div class="mobile-role-switch">
+
+
+        <button
+            type="button"
+            class="mobile-role-button active"
+            data-role="student"
+        >
+            👨‍🎓 ተማሪ
+        </button>
+
+
+        <button
+            type="button"
+            class="mobile-role-button"
+            data-role="mentor"
+        >
+            👩‍🏫 አስተማሪ
+        </button>
+
+
+    </div>
+
+
+    <nav id="mobile-nav"></nav>
+
+
+    <div class="drawer-footer">
+
+    <div class="mobile-offline-status">
+
+        <span class="online-dot"></span>
+
+        Offline Ready
+
+    </div>
+
+
+    <button
+        id="mobile-logout-button"
+        class="logout-button mobile-logout-button"
+        type="button"
+    >
+
+        <span class="logout-icon">↪</span>
+
+        <span>Logout</span>
+
+    </button>
+
+</div>
+
+
+</aside>
+
+
+<!-- ================================
+     TOAST
+================================= -->
+
+<div
+    id="toast"
+    class="toast"
+></div>
+
+
+<!-- ================================
+     APP JAVASCRIPT
+================================= -->
+
+<script src="./app.js?v=208"></script>
+
+
+</body>
+
+</html>
+

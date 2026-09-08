@@ -1,0 +1,2401 @@
+/* =========================================================
+   KOYE FECHE YOHANIS BEGENA
+   MOBILE + DESKTOP PREVIEW
+   ========================================================= */
+
+
+:root {
+
+    --bg: #07130e;
+
+    --bg-soft: #0b1913;
+
+    --card: #10231b;
+
+    --card-2: #142c22;
+
+    --border: #24483a;
+
+    --text: #f7f5ed;
+
+    --muted: #9fb4aa;
+
+    --gold: #d5ad51;
+
+    --gold-light: #f1cf78;
+
+    --green: #287452;
+
+    --green-light: #56c38b;
+
+    --danger: #e76f6f;
+
+}
+
+
+* {
+
+    box-sizing: border-box;
+
+}
+
+
+html,
+body {
+
+    margin: 0;
+
+    padding: 0;
+
+    width: 100%;
+
+    min-height: 100%;
+
+}
+
+
+body {
+
+    min-height: 100vh;
+
+    background:
+
+        radial-gradient(
+            circle at 100% 0%,
+            #174732 0%,
+            #07130e 45%
+        );
+
+    color: var(--text);
+
+    font-family:
+
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans Ethiopic",
+        sans-serif;
+
+    overflow-x: hidden;
+
+}
+
+
+/* =========================================================
+   APP
+   ========================================================= */
+
+
+.app-shell {
+
+    min-height: 100vh;
+
+    display: grid;
+
+    grid-template-columns: 285px 1fr;
+
+}
+
+
+/* =========================================================
+   DESKTOP SIDEBAR
+   ========================================================= */
+
+
+.desktop-sidebar {
+
+    width: 285px;
+
+    min-height: 100vh;
+
+    padding: 20px;
+
+    background: rgba(5, 15, 10, 0.96);
+
+    border-right: 1px solid var(--border);
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 0;
+
+}
+
+
+.brand-cross {
+
+    width: 46px;
+
+    height: 46px;
+
+    flex: 0 0 46px;
+
+    border-radius: 14px;
+
+    display: grid;
+
+    place-items: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--gold-light),
+            var(--gold)
+        );
+
+    color: #1b2117;
+
+    font-size: 23px;
+
+    font-weight: 900;
+
+}
+
+
+.brand h2 {
+
+    margin: 0;
+
+    font-size: 15px;
+
+}
+
+
+.brand span {
+
+    display: block;
+
+    margin-top: 3px;
+
+    font-size: 11px;
+
+    color: var(--gold-light);
+
+}
+
+
+/* =========================================================
+   ROLE SWITCH
+   ========================================================= */
+
+
+.role-switch {
+
+    margin-top: 24px;
+
+    padding: 4px;
+
+    background: #0c1c15;
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+}
+
+
+.role-button {
+
+    border: 0;
+
+    border-radius: 9px;
+
+    padding: 10px 6px;
+
+    background: transparent;
+
+    color: var(--muted);
+
+    cursor: pointer;
+
+}
+
+
+.role-button.active {
+
+    background: var(--gold);
+
+    color: #172018;
+
+    font-weight: 800;
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+
+#desktop-nav {
+
+    margin-top: 20px;
+
+    display: grid;
+
+    gap: 6px;
+
+}
+
+
+.nav-item {
+
+    width: 100%;
+
+    border: 0;
+
+    border-radius: 11px;
+
+    padding: 12px;
+
+    background: transparent;
+
+    color: var(--muted);
+
+    cursor: pointer;
+
+    text-align: left;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    transition:
+        background 0.18s ease,
+        color 0.18s ease;
+
+}
+
+
+.nav-item:hover {
+
+    background: #143126;
+
+    color: var(--text);
+
+}
+
+
+.nav-item.active {
+
+    background: #17382b;
+
+    color: white;
+
+    box-shadow:
+        inset 3px 0 0 var(--gold);
+
+}
+
+
+/* =========================================================
+   OFFLINE
+   ========================================================= */
+
+
+.offline-status,
+.drawer-footer {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+}
+
+
+.offline-status {
+
+    margin-top: auto;
+
+    padding-top: 15px;
+
+    border-top: 1px solid var(--border);
+
+}
+
+
+.online-dot {
+
+    width: 9px;
+
+    height: 9px;
+
+    flex: 0 0 9px;
+
+    border-radius: 50%;
+
+    background: #62d79a;
+
+    box-shadow:
+        0 0 11px rgba(98, 215, 154, 0.7);
+
+}
+
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+
+.main {
+
+    min-width: 0;
+
+    padding: 26px 34px 50px;
+
+}
+
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+
+
+.topbar {
+
+    min-height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 24px;
+
+}
+
+
+.page-heading {
+
+    flex: 1;
+
+    min-width: 0;
+
+}
+
+
+.church-label {
+
+    font-size: 9px;
+
+    letter-spacing: 0.18em;
+
+    color: var(--gold-light);
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+}
+
+
+.page-heading h1 {
+
+    margin: 4px 0 0;
+
+    font-size: 32px;
+
+}
+
+
+/* =========================================================
+   TOP ACTIONS
+   ========================================================= */
+
+
+.top-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+}
+
+
+.icon-button,
+.menu-button {
+
+    width: 42px;
+
+    height: 42px;
+
+    flex: 0 0 42px;
+
+    display: grid;
+
+    place-items: center;
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    background: #10231b;
+
+    color: var(--text);
+
+    cursor: pointer;
+
+}
+
+
+.profile-circle {
+
+    width: 42px;
+
+    height: 42px;
+
+    flex: 0 0 42px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 12px;
+
+    background: var(--gold);
+
+    color: #172018;
+
+    font-weight: 900;
+
+}
+
+
+.menu-button {
+
+    display: none;
+
+    font-size: 21px;
+
+}
+
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+
+.grid {
+
+    display: grid;
+
+    gap: 16px;
+
+}
+
+
+.stats {
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+
+}
+
+
+.two {
+
+    grid-template-columns:
+        1.25fr
+        0.9fr;
+
+}
+
+
+.three {
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+}
+
+
+.card {
+
+    min-width: 0;
+
+    padding: 18px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(20, 43, 34, 0.96),
+            rgba(11, 27, 21, 0.96)
+        );
+
+}
+
+
+.card h3 {
+
+    margin-top: 0;
+
+}
+
+
+.big {
+
+    font-size: 29px;
+
+    font-weight: 900;
+
+}
+
+
+.gold {
+
+    color: var(--gold-light);
+
+}
+
+
+.muted {
+
+    color: var(--muted);
+
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+
+.hero {
+
+    padding: 24px;
+
+    border-radius: 20px;
+
+    border: 1px solid #315b47;
+
+    background:
+        linear-gradient(
+            120deg,
+            #194b38,
+            #14251e
+        );
+
+}
+
+
+.hero h2 {
+
+    margin: 10px 0;
+
+    font-size: 28px;
+
+}
+
+
+.hero p {
+
+    max-width: 650px;
+
+    color: #c9d8d0;
+
+    line-height: 1.6;
+
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+
+.btn {
+
+    border: 0;
+
+    border-radius: 11px;
+
+    padding: 11px 15px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+}
+
+
+.btn.primary {
+
+    background: var(--gold);
+
+    color: #172018;
+
+}
+
+
+.btn.secondary {
+
+    background: #19362b;
+
+    border: 1px solid var(--border);
+
+    color: white;
+
+}
+
+
+.row {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+
+}
+
+
+.space {
+
+    justify-content: space-between;
+
+}
+
+
+/* =========================================================
+   PILL
+   ========================================================= */
+
+
+.pill {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 6px 9px;
+
+    border-radius: 99px;
+
+    background: #183328;
+
+    color: #d8e6de;
+
+    font-size: 11px;
+
+}
+
+
+.pill.gold {
+
+    background: #3b311d;
+
+    color: var(--gold-light);
+
+}
+
+
+/* =========================================================
+   PROGRESS
+   ========================================================= */
+
+
+.meter {
+
+    width: 100%;
+
+    height: 9px;
+
+    overflow: hidden;
+
+    border-radius: 20px;
+
+    background: #09140f;
+
+}
+
+
+.meter > div {
+
+    height: 100%;
+
+    border-radius: inherit;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--gold),
+            var(--gold-light)
+        );
+
+}
+
+
+/* =========================================================
+   LIST
+   ========================================================= */
+
+
+.list {
+
+    display: grid;
+
+    gap: 9px;
+
+}
+
+
+.list-item {
+
+    padding: 12px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    background: #0d1e17;
+
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+
+.table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+}
+
+
+.table th,
+.table td {
+
+    padding: 11px;
+
+    border-bottom: 1px solid var(--border);
+
+    text-align: left;
+
+}
+
+
+.table th {
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+
+input,
+textarea,
+select {
+
+    max-width: 100%;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    padding: 11px 12px;
+
+    background: #0a1712;
+
+    color: white;
+
+    outline: none;
+
+}
+
+
+textarea {
+
+    min-height: 110px;
+
+    resize: vertical;
+
+}
+
+
+/* =========================================================
+   BEGENA
+   ========================================================= */
+
+
+.instrument {
+
+    min-height: 440px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 18px;
+
+    background:
+        radial-gradient(
+            circle,
+            #23523e,
+            #091810
+        );
+
+}
+
+
+.begena-body {
+
+    width: 80%;
+
+    max-width: 600px;
+
+    height: 300px;
+
+    position: relative;
+
+    border-radius: 50px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ae7a39,
+            #4f2a13
+        );
+
+    box-shadow:
+        inset 0 0 0 9px #d09a4d,
+        inset 0 0 0 15px #351c0c;
+
+}
+
+
+.begena-strings {
+
+    position: absolute;
+
+    inset: 15px 10%;
+
+    display: flex;
+
+    justify-content: space-between;
+
+}
+
+
+.begena-string {
+
+    width: 4px;
+
+    height: 100%;
+
+    border-radius: 99px;
+
+    cursor: pointer;
+
+    background:
+        linear-gradient(
+            #f2dda8,
+            #ad7837,
+            #f2dda8
+        );
+
+    transition: transform 0.12s ease;
+
+}
+
+
+.begena-string:hover {
+
+    transform: scaleX(1.6);
+
+}
+
+
+/* =========================================================
+   DRAWER
+   ========================================================= */
+
+
+.mobile-drawer {
+
+    position: fixed;
+
+    top: 0;
+
+    left: 0;
+
+    bottom: 0;
+
+    width: min(88vw, 350px);
+
+    z-index: 9999;
+
+    display: flex;
+
+    flex-direction: column;
+
+    padding: 18px;
+
+    background: #08160f;
+
+    border-right: 1px solid var(--border);
+
+    box-shadow:
+        25px 0 70px rgba(0, 0, 0, 0.65);
+
+    transform: translateX(-110%);
+
+    transition:
+        transform 0.25s ease;
+
+    visibility: hidden;
+
+}
+
+
+.mobile-drawer.open {
+
+    transform: translateX(0);
+
+    visibility: visible;
+
+}
+
+
+.drawer-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9998;
+
+    background:
+        rgba(0, 0, 0, 0.68);
+
+    backdrop-filter: blur(2px);
+
+    display: none;
+
+}
+
+
+.drawer-overlay.open {
+
+    display: block;
+
+}
+
+
+.drawer-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+
+}
+
+
+.mobile-role-switch {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 4px;
+
+    padding: 4px;
+
+    background: #0c1c15;
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+}
+
+
+.mobile-role-button {
+
+    border: 0;
+
+    border-radius: 9px;
+
+    padding: 10px 6px;
+
+    background: transparent;
+
+    color: var(--muted);
+
+    cursor: pointer;
+
+}
+
+
+.mobile-role-button.active {
+
+    background: var(--gold);
+
+    color: #172018;
+
+    font-weight: 800;
+
+}
+
+
+#mobile-nav {
+
+    margin-top: 17px;
+
+    flex: 1;
+
+    overflow-y: auto;
+
+    display: grid;
+
+    align-content: start;
+
+    gap: 6px;
+
+}
+
+
+.drawer-footer {
+
+    padding-top: 15px;
+
+    border-top: 1px solid var(--border);
+
+}
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+
+.toast {
+
+    position: fixed;
+
+    right: 20px;
+
+    bottom: 20px;
+
+    z-index: 10000;
+
+    padding: 12px 15px;
+
+    border-radius: 12px;
+
+    background: #183a2c;
+
+    border: 1px solid #416b56;
+
+    opacity: 0;
+
+    transform: translateY(15px);
+
+    pointer-events: none;
+
+    transition: 0.2s ease;
+
+}
+
+
+.toast.show {
+
+    opacity: 1;
+
+    transform: translateY(0);
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+
+@media (max-width: 700px) {
+
+
+    .app-shell {
+
+        display: block;
+
+        width: 100%;
+
+    }
+
+
+    .desktop-sidebar {
+
+        display: none;
+
+    }
+
+
+    .main {
+
+        width: 100%;
+
+        padding: 14px;
+
+    }
+
+
+    .topbar {
+
+        width: 100%;
+
+        align-items: center;
+
+        gap: 9px;
+
+    }
+
+
+    .menu-button {
+
+        display: grid;
+
+    }
+
+
+    .page-heading h1 {
+
+        font-size: 24px;
+
+    }
+
+
+    .church-label {
+
+        font-size: 7px;
+
+    }
+
+
+    .profile-circle {
+
+        display: none;
+
+    }
+
+
+    .top-actions {
+
+        gap: 5px;
+
+    }
+
+
+    .icon-button {
+
+        width: 40px;
+
+        height: 40px;
+
+        flex-basis: 40px;
+
+    }
+
+
+    .stats {
+
+        grid-template-columns:
+            1fr
+            1fr;
+
+        gap: 10px;
+
+    }
+
+
+    .two,
+    .three {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .card {
+
+        padding: 14px;
+
+        border-radius: 16px;
+
+    }
+
+
+    .hero {
+
+        padding: 18px;
+
+    }
+
+
+    .hero h2 {
+
+        font-size: 23px;
+
+    }
+
+
+    .hero p {
+
+        font-size: 14px;
+
+    }
+
+
+    .row .btn {
+
+        flex: 1;
+
+        min-width: 130px;
+
+    }
+
+
+    .instrument {
+
+        min-height: 350px;
+
+    }
+
+
+    .begena-body {
+
+        width: 92%;
+
+        height: 240px;
+
+        border-radius: 38px;
+
+    }
+
+
+    .begena-strings {
+
+        inset: 12px 9%;
+
+    }
+
+
+    .begena-string {
+
+        width: 3px;
+
+    }
+
+
+    .table {
+
+        font-size: 13px;
+
+    }
+
+
+    .table th,
+    .table td {
+
+        padding: 8px;
+
+    }
+
+}
+/* =========================================================
+   KOYE FECHE YOHANIS BEGENA
+   PREMIUM LOGIN PAGE
+   ========================================================= */
+
+#login-page {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    min-height: 100vh;
+    padding: 24px;
+
+    overflow-y: auto;
+    box-sizing: border-box;
+
+    background:
+        radial-gradient(
+            circle at 15% 15%,
+            rgba(40, 116, 82, 0.28),
+            transparent 34%
+        ),
+        radial-gradient(
+            circle at 85% 85%,
+            rgba(213, 173, 81, 0.12),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #040b08 0%,
+            #071812 45%,
+            #0a1c14 100%
+        );
+
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans Ethiopic",
+        sans-serif;
+
+    animation: loginFadeIn 0.55s ease;
+}
+
+
+/* =========================================================
+   BACKGROUND GLOW
+   ========================================================= */
+
+#login-page::before {
+    content: "";
+
+    position: absolute;
+
+    width: 520px;
+    height: 520px;
+
+    top: -240px;
+    left: -180px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(40, 116, 82, 0.16);
+
+    filter: blur(90px);
+
+    pointer-events: none;
+}
+
+#login-page::after {
+    content: "";
+
+    position: absolute;
+
+    width: 450px;
+    height: 450px;
+
+    right: -180px;
+    bottom: -220px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(213, 173, 81, 0.08);
+
+    filter: blur(100px);
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   LOGIN CARD
+   ========================================================= */
+
+#login-page .login-card {
+    position: relative;
+    z-index: 2;
+
+    width: min(100%, 430px);
+
+    padding: 42px 38px;
+
+    box-sizing: border-box;
+
+    border-radius: 28px;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(18, 42, 31, 0.92),
+            rgba(7, 19, 14, 0.95)
+        );
+
+    box-shadow:
+        0 35px 90px rgba(0, 0, 0, 0.55),
+        inset 0 1px 0 rgba(255, 255, 255, 0.045);
+
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+
+    animation:
+        loginCardEnter
+        0.65s
+        cubic-bezier(.22, 1, .36, 1);
+}
+
+
+/* =========================================================
+   LOGO
+   ========================================================= */
+
+#login-page .login-logo {
+    width: 78px;
+    height: 78px;
+
+    margin: 0 auto 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 23px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #287452,
+            #123524
+        );
+
+    border: 1px solid rgba(241, 207, 120, 0.25);
+
+    color: var(--gold-light);
+
+    font-size: 34px;
+    font-weight: 900;
+
+    box-shadow:
+        0 15px 40px rgba(24, 91, 60, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+#login-page .login-logo:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 20px 50px rgba(24, 91, 60, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+#login-page .login-card h1 {
+    margin: 0;
+
+    text-align: center;
+
+    color: #f7f5ed;
+
+    font-size: 27px;
+    line-height: 1.2;
+    font-weight: 850;
+
+    letter-spacing: -0.5px;
+}
+
+#login-page .login-card h1 span {
+    display: block;
+
+    margin-top: 8px;
+
+    color: var(--gold-light);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    letter-spacing: 1.6px;
+}
+
+
+/* =========================================================
+   SUBTITLE
+   ========================================================= */
+
+#login-page .login-subtitle {
+    margin: 11px auto 30px;
+
+    max-width: 320px;
+
+    text-align: center;
+
+    color: #9fb4aa;
+
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+#login-page #login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* =========================================================
+   LABELS
+   ========================================================= */
+
+#login-page .login-card label {
+    display: block;
+
+    margin: 16px 0 8px;
+
+    color: #dce7e2;
+
+    font-size: 13px;
+    font-weight: 650;
+
+    letter-spacing: 0.1px;
+}
+
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
+
+#login-page .login-card input {
+    width: 100%;
+    height: 55px;
+
+    box-sizing: border-box;
+
+    padding: 0 16px;
+
+    border-radius: 15px;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    background:
+        rgba(4, 16, 11, 0.72);
+
+    color: #f7f5ed;
+
+    outline: none;
+
+    font-family: inherit;
+    font-size: 15px;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+#login-page .login-card input::placeholder {
+    color: rgba(159, 180, 170, 0.42);
+}
+
+#login-page .login-card input:hover {
+    background:
+        rgba(7, 24, 16, 0.82);
+}
+
+#login-page .login-card input:focus {
+    border-color:
+        rgba(241, 207, 120, 0.7);
+
+    background:
+        rgba(9, 27, 19, 0.9);
+
+    box-shadow:
+        0 0 0 4px rgba(213, 173, 81, 0.08),
+        0 10px 30px rgba(0, 0, 0, 0.18);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   LOGIN BUTTON
+   ========================================================= */
+
+#login-page .login-button,
+#login-page #login-form button[type="submit"] {
+    position: relative;
+
+    width: 100%;
+    height: 56px;
+
+    margin-top: 24px;
+
+    border: none;
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f1cf78 0%,
+            #d5ad51 48%,
+            #e2c066 100%
+        );
+
+    color: #10170f;
+
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 850;
+
+    cursor: pointer;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 12px 35px rgba(213, 173, 81, 0.18);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        filter 0.2s ease;
+}
+
+#login-page .login-button::before,
+#login-page #login-form button[type="submit"]::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -120%;
+
+    width: 80%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.22),
+            transparent
+        );
+
+    transform: skewX(-20deg);
+
+    transition:
+        left 0.55s ease;
+}
+
+#login-page .login-button:hover,
+#login-page #login-form button[type="submit"]:hover {
+    transform: translateY(-2px);
+
+    filter: brightness(1.05);
+
+    box-shadow:
+        0 17px 40px rgba(213, 173, 81, 0.26);
+}
+
+#login-page .login-button:hover::before,
+#login-page #login-form button[type="submit"]:hover::before {
+    left: 130%;
+}
+
+#login-page .login-button:active,
+#login-page #login-form button[type="submit"]:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+#login-page .login-error,
+#login-page #login-error {
+    min-height: 20px;
+
+    margin-top: 13px;
+
+    padding: 0;
+
+    text-align: center;
+
+    color: #ff8787;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+#login-page .login-footer {
+    margin-top: 27px;
+
+    text-align: center;
+
+    color: rgba(159, 180, 170, 0.5);
+
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+#login-page .login-footer strong {
+    color:
+        rgba(241, 207, 120, 0.78);
+
+    font-weight: 650;
+}
+
+
+/* =========================================================
+   LITTLE TOP BRAND LINE
+   ========================================================= */
+
+#login-page .login-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 50%;
+
+    width: 90px;
+    height: 2px;
+
+    transform: translateX(-50%);
+
+    border-radius: 999px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--gold-light),
+            transparent
+        );
+
+    opacity: 0.8;
+}
+
+
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
+
+@keyframes loginFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes loginCardEnter {
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(25px)
+            scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   MOBILE LOGIN
+   ========================================================= */
+
+@media (max-width: 520px) {
+
+    #login-page {
+        padding: 16px;
+    }
+
+    #login-page .login-card {
+        padding: 34px 22px;
+
+        border-radius: 24px;
+    }
+
+    #login-page .login-logo {
+        width: 68px;
+        height: 68px;
+
+        border-radius: 20px;
+
+        font-size: 29px;
+    }
+
+    #login-page .login-card h1 {
+        font-size: 24px;
+    }
+
+    #login-page .login-subtitle {
+        margin-bottom: 25px;
+    }
+
+    #login-page .login-card input {
+        height: 53px;
+    }
+
+    #login-page .login-button,
+    #login-page #login-form button[type="submit"] {
+        height: 54px;
+    }
+}
+
+
+/* =========================================================
+   SMALL HEIGHT SCREENS
+   ========================================================= */
+
+@media (max-height: 700px) {
+
+    #login-page {
+        align-items: flex-start;
+
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    #login-page .login-card {
+        margin: auto 0;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    #login-page,
+    #login-page .login-card {
+        animation: none;
+    }
+
+    #login-page *,
+    #login-page *::before,
+    #login-page *::after {
+        transition: none !important;
+    }
+}
+/* =========================================================
+   REAL AUTHENTICATED VERSION
+   Prototype role switching disabled
+   ========================================================= */
+
+.role-switch,
+.mobile-role-switch {
+    display: none;
+}
+.logout-button {
+    width: 100%;
+    margin: 16px 0 0;
+    padding: 12px 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+
+    border: 1px solid rgba(213, 173, 81, 0.35);
+    border-radius: 12px;
+
+    background: rgba(213, 173, 81, 0.08);
+    color: var(--text);
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.logout-icon {
+    font-size: 18px;
+    line-height: 1;
+    color: var(--gold-light);
+}
+
+.logout-button:hover {
+    background: rgba(213, 173, 81, 0.16);
+    border-color: rgba(213, 173, 81, 0.65);
+    color: var(--gold-light);
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.logout-button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.logout-button:disabled {
+    opacity: 0.65;
+    cursor: wait;
+    transform: none;
+}
+.desktop-sidebar .logout-button {
+    margin-top: auto;
+}
+/* =========================================================
+   MOBILE APP LAYOUT
+========================================================= */
+
+@media (max-width: 700px) {
+
+    html,
+    body {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+
+
+    /* -----------------------------------------
+       APP SHELL
+    ----------------------------------------- */
+
+    .app-shell {
+        display: block !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+
+    .desktop-sidebar {
+        display: none !important;
+    }
+
+
+    .main {
+        display: block !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+
+    /* -----------------------------------------
+       TOP BAR
+    ----------------------------------------- */
+
+    .topbar {
+        width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+
+    /* -----------------------------------------
+       PAGE CONTENT
+    ----------------------------------------- */
+
+    #page-content {
+        display: block !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        margin: 0 !important;
+
+        padding: 12px !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* -----------------------------------------
+       ALL GRIDS → ONE COLUMN
+    ----------------------------------------- */
+
+    #page-content .grid,
+    #page-content .grid.two,
+    #page-content .grid.three,
+    #page-content .grid.stats {
+        display: grid !important;
+
+        grid-template-columns:
+            minmax(0, 1fr) !important;
+
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* -----------------------------------------
+       CARDS
+    ----------------------------------------- */
+
+    #page-content .grid > *,
+    #page-content .card {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* -----------------------------------------
+       HERO
+    ----------------------------------------- */
+
+    #page-content .hero {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* -----------------------------------------
+       ROWS
+    ----------------------------------------- */
+
+    #page-content .row {
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* -----------------------------------------
+       LONG TEXT / INPUTS
+    ----------------------------------------- */
+
+    #page-content input,
+    #page-content select,
+    #page-content textarea,
+    #page-content button {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+
+    /* -----------------------------------------
+       MOBILE LOGOUT
+    ----------------------------------------- */
+
+    .drawer-footer {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+
+    .mobile-offline-status {
+        display: flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+        color: var(--muted);
+
+        font-size: 13px;
+    }
+
+
+    .mobile-logout-button {
+        display: flex !important;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 10px;
+
+        width: 100% !important;
+
+        margin-top: 14px;
+    }
+
+
+    /* -----------------------------------------
+       BEGENA PLAYABLE STRINGS
+    ----------------------------------------- */
+
+    .begena-string {
+        position: relative;
+        cursor: pointer;
+    }
+
+
+    .begena-string span {
+        position: absolute;
+
+        top: -28px;
+
+        left: 50%;
+
+        transform:
+            translateX(-50%);
+
+        font-size: 12px;
+
+        font-weight: 800;
+
+        opacity: 0.7;
+    }
+
+
+    .playable-string {
+        cursor: pointer;
+    }
+
+
+    .playable-string span {
+        opacity: 1;
+    }
+
+
+    .secondary-string {
+        opacity: 0.35;
+
+        pointer-events: none;
+    }
+
+
+    /* -----------------------------------------
+       BEGENA PRACTICE MODE
+    ----------------------------------------- */
+
+    .begena-practice-mode {
+        position: fixed;
+
+        inset: 0;
+
+        z-index: 1000;
+
+        width: 100vw !important;
+        height: 100vh !important;
+
+        margin: 0 !important;
+
+        padding: 10px !important;
+
+        box-sizing: border-box !important;
+
+        display: block !important;
+
+        overflow: auto;
+
+        background:
+            var(--bg, #07130e);
+    }
+
+
+    .begena-practice-mode
+        > .card:first-child {
+
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+
+        height:
+            calc(100vh - 20px);
+
+        margin: 0 !important;
+
+        box-sizing: border-box !important;
+
+        overflow-y: auto;
+    }
+
+
+    .begena-practice-mode
+        > .card:last-child {
+
+        display: none !important;
+    }
+
+
+    .begena-practice-mode
+        .instrument {
+
+        width: 100% !important;
+
+        min-height: 68vh;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        overflow: hidden;
+    }
+
+
+    .begena-practice-mode
+        .begena-body {
+
+        width: 94vw;
+
+        max-width: 100%;
+
+        margin: 0 auto;
+    }
+
+}
+/* =========================================================
+   BEGENA PRACTICE MODE — DESKTOP ONLY
+   Do not affect the phone layout
+   ========================================================= */
+@media (min-width: 701px) {
+
+    .begena-practice-mode .begena-string {
+        position: relative;
+    }
+
+    /* Main playable strings */
+    .begena-practice-mode .begena-string.playable-string {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        cursor: pointer !important;
+    }
+
+    /* Secondary / unavailable strings */
+    .begena-practice-mode .begena-string.secondary-string {
+        opacity: 0.35 !important;
+        pointer-events: none !important;
+        cursor: default !important;
+    }
+
+    /* Keep the string number positioned ON the string */
+    .begena-practice-mode .begena-string span {
+        position: absolute !important;
+        top: -28px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        font-size: 12px !important;
+        font-weight: 800 !important;
+        white-space: nowrap;
+    }
+
+    /* Playable numbers stay clear */
+    .begena-practice-mode .begena-string.playable-string span {
+        opacity: 1 !important;
+    }
+
+    /* Unavailable numbers are faded too */
+    .begena-practice-mode .begena-string.secondary-string span {
+        opacity: 0.35 !important;
+    }
+}
