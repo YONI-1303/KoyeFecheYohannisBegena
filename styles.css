@@ -2399,3 +2399,41 @@ textarea {
         opacity: 0.35 !important;
     }
 }
+
+/* =========================================================
+   ACCOUNT / PASSWORD
+========================================================= */
+.account-security-card {
+    border: 1px solid rgba(0, 0, 0, 0.18);
+}
+
+.account-password-form {
+    display: grid;
+    gap: 10px;
+}
+
+.account-password-form label {
+    font-weight: 700;
+}
+
+.account-password-form input {
+    width: 100%;
+}
+
+.password-hint {
+    margin-top: 2px;
+    line-height: 1.5;
+}
+
+.account-message {
+    padding: 12px 14px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.account-message.success {
+    border-color: rgba(80, 200, 120, 0.28);
+    background: rgba(80, 200, 120, 0.08);
+}

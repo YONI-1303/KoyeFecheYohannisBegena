@@ -244,7 +244,387 @@ function escapeHtml(value) {
 
 }
 
+/* =========================================================
+   OFFLINE STUDENT LOGIN
+========================================================= */
 
+const OFFLINE_STUDENT_KEY =
+    "koye_feche_offline_student_v1";
+
+
+function arrayBufferToBase64(buffer) {
+
+    const bytes =
+        new Uint8Array(buffer);
+
+    let binary = "";
+
+    bytes.forEach(
+        byte => {
+            binary += String.fromCharCode(
+                byte
+            );
+        }
+    );
+
+    return btoa(binary);
+
+}
+
+
+function base64ToArrayBuffer(base64) {
+
+    const binary =
+        atob(base64);
+
+    const bytes =
+        new Uint8Array(
+            binary.length
+        );
+
+    for (
+        let i = 0;
+        i < binary.length;
+        i++
+    ) {
+
+        bytes[i] =
+            binary.charCodeAt(i);
+
+    }
+
+    return bytes.buffer;
+
+}
+
+
+function generateOfflineSalt() {
+
+    const salt =
+        new Uint8Array(16);
+
+    crypto.getRandomValues(
+        salt
+    );
+
+    return arrayBufferToBase64(
+        salt.buffer
+    );
+
+}
+
+
+async function hashOfflinePassword(
+    password,
+    saltBase64
+) {
+
+    if (
+        !window.crypto ||
+        !window.crypto.subtle
+    ) {
+
+        throw new Error(
+            "Browser cryptography is unavailable."
+        );
+
+    }
+
+    const encoder =
+        new TextEncoder();
+
+    const keyMaterial =
+        await crypto.subtle.importKey(
+            "raw",
+            encoder.encode(password),
+            "PBKDF2",
+            false,
+            ["deriveBits"]
+        );
+
+    const salt =
+        base64ToArrayBuffer(
+            saltBase64
+        );
+
+    const derivedBits =
+        await crypto.subtle.deriveBits(
+            {
+                name: "PBKDF2",
+                salt,
+                iterations: 120000,
+                hash: "SHA-256"
+            },
+            keyMaterial,
+            256
+        );
+
+    return arrayBufferToBase64(
+        derivedBits
+    );
+
+}
+
+
+async function saveOfflineStudentCredentials(
+    studentId,
+    password,
+    user,
+    profile
+) {
+
+    if (
+        !user ||
+        !profile ||
+        profile.role !== "student"
+    ) {
+
+        return false;
+
+    }
+
+    try {
+
+        const salt =
+            generateOfflineSalt();
+
+        const passwordHash =
+            await hashOfflinePassword(
+                password,
+                salt
+            );
+
+        const offlineData = {
+
+            version: 1,
+
+            userId:
+                user.id,
+
+            email:
+                user.email,
+
+            studentId:
+                studentId,
+
+            passwordHash:
+                passwordHash,
+
+            salt:
+                salt,
+
+            profile:
+                profile,
+
+            currentClass:
+                state.currentClass || null,
+
+            studentAttendance:
+                state.studentAttendance || [],
+
+            savedAt:
+                new Date().toISOString()
+
+        };
+
+        localStorage.setItem(
+            OFFLINE_STUDENT_KEY,
+            JSON.stringify(
+                offlineData
+            )
+        );
+
+        console.log(
+            "✅ Offline student login saved"
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "❌ Failed to save offline login:",
+            error
+        );
+
+        return false;
+
+    }
+
+}
+
+
+async function loginOfflineStudent(
+    studentId,
+    password,
+    errorElement
+) {
+
+    try {
+
+        const saved =
+            localStorage.getItem(
+                OFFLINE_STUDENT_KEY
+            );
+
+        if (!saved) {
+
+            if (errorElement) {
+
+                errorElement.textContent =
+                    "No offline account is available on this device. Please connect to the internet and log in once.";
+
+            }
+
+            return false;
+
+        }
+
+        const offlineData =
+            JSON.parse(saved);
+
+        if (
+            !offlineData ||
+            offlineData.version !== 1
+        ) {
+
+            if (errorElement) {
+
+                errorElement.textContent =
+                    "Offline login data is unavailable. Please connect to the internet.";
+
+            }
+
+            return false;
+
+        }
+
+        if (
+            offlineData.studentId !==
+            studentId
+        ) {
+
+            if (errorElement) {
+
+                errorElement.textContent =
+                    "This Student ID is not registered for offline use on this device.";
+
+            }
+
+            return false;
+
+        }
+
+        const passwordHash =
+            await hashOfflinePassword(
+                password,
+                offlineData.salt
+            );
+
+        if (
+            passwordHash !==
+            offlineData.passwordHash
+        ) {
+
+            if (errorElement) {
+
+                errorElement.textContent =
+                    "Invalid Student ID or password.";
+
+            }
+
+            return false;
+
+        }
+
+        if (
+            !offlineData.profile ||
+            offlineData.profile.role !==
+                "student"
+        ) {
+
+            if (errorElement) {
+
+                errorElement.textContent =
+                    "Offline student profile is unavailable.";
+
+            }
+
+            return false;
+
+        }
+
+        window.currentUser = {
+
+            id:
+                offlineData.userId,
+
+            email:
+                offlineData.email,
+
+            offline:
+                true
+
+        };
+
+        window.currentProfile =
+            offlineData.profile;
+
+        state.role =
+            "student";
+
+        state.page =
+            "home";
+
+        state.currentClass =
+            offlineData.currentClass ||
+            null;
+
+        state.studentAttendance =
+            Array.isArray(
+                offlineData.studentAttendance
+            )
+                ? offlineData.studentAttendance
+                : [];
+
+        sessionStorage.setItem(
+            "begena_authenticated",
+            "true"
+        );
+
+        await showApp();
+
+        await render();
+
+        showToast(
+            "✅ Offline login successful"
+        );
+
+        console.log(
+            "✅ Student logged in offline"
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "❌ Offline login failed:",
+            error
+        );
+
+        if (errorElement) {
+
+            errorElement.textContent =
+                "Offline login could not be completed.";
+
+        }
+
+        return false;
+
+    }
+
+}
 /* =========================================================
    DATE DISPLAY
 ========================================================= */
@@ -1646,24 +2026,52 @@ console.log("🟡 LOGIN ID ENTERED:", studentId);
             }
 
 
-            if (!supabaseClient) {
-
-                if (errorElement) {
-
-                    errorElement.textContent =
-                        "Supabase is unavailable.";
-
-                }
-
-                return;
-
-            }
+const submitButton =
+    loginForm.querySelector(
+        'button[type="submit"]'
+    );
 
 
-            const submitButton =
-                loginForm.querySelector(
-                    'button[type="submit"]'
-                );
+if (
+    !navigator.onLine ||
+    !supabaseClient
+) {
+
+    if (submitButton) {
+
+        submitButton.disabled =
+            true;
+
+        submitButton.textContent =
+            "Checking offline...";
+
+    }
+
+    try {
+
+        await loginOfflineStudent(
+            studentId,
+            password,
+            errorElement
+        );
+
+    } finally {
+
+        if (submitButton) {
+
+            submitButton.disabled =
+                false;
+
+            submitButton.textContent =
+                "Sign In";
+
+        }
+
+    }
+
+    return;
+
+}
 
 
             if (submitButton) {
@@ -1695,27 +2103,41 @@ console.log("🟡 LOGIN ID ENTERED:", studentId);
 console.log("🟠 LOGIN LOOKUP RESULT:", lookupData);
 
                 if (
-                    lookupError ||
-                    !lookupData?.email
-                ) {
+    lookupError ||
+    !lookupData?.email
+) {
 
-                    console.error(
-                        "❌ Student ID lookup failed:",
-                        lookupError
-                    );
+    console.warn(
+        "⚠️ Supabase lookup failed. Trying offline login...",
+        lookupError
+    );
 
+    const offlineLoggedIn =
+        await loginOfflineStudent(
+            studentId,
+            password,
+            errorElement
+        );
 
-                    if (errorElement) {
+    if (offlineLoggedIn) {
+        return;
+    }
 
-                        errorElement.textContent =
-                            lookupData?.error ||
-                            "Invalid Student ID or password.";
+    console.error(
+        "❌ Student ID lookup failed:",
+        lookupError
+    );
 
-                    }
+    if (errorElement) {
 
-                    return;
+        errorElement.textContent =
+            lookupData?.error ||
+            "Invalid Student ID or password.";
 
-                }
+    }
+
+    return;
+}
 
 
                 const {
@@ -1823,10 +2245,20 @@ console.log("🟠 LOGIN LOOKUP RESULT:", lookupData);
 
 
                 await loadRoleData();
-                await showApp();
-                await loadRoleData();
 await showApp();
-await render();await render();
+
+await loadRoleData();
+
+await saveOfflineStudentCredentials(
+    studentId,
+    password,
+    user,
+    profile
+);
+
+await showApp();
+
+await render();
 
 
                 showToast(
@@ -1995,8 +2427,14 @@ const studentNavigation = [
     icon: "🏆",
     am: "ምስክር ወረቀት",
     en: "Certificates"
-}
+},
 
+    {
+        id: "account",
+        icon: "🔐",
+        am: "መለያ እና ደህንነት",
+        en: "Account & Security"
+    }
 ];
 
 
@@ -2066,8 +2504,14 @@ const mentorNavigation = [
         icon: "🏆",
         am: "ምስክር ወረቀት",
         en: "Certificates"
-    }
+    },
 
+    {
+        id: "account",
+        icon: "🔐",
+        am: "መለያ እና ደህንነት",
+        en: "Account & Security"
+    }
 ];
 
 
@@ -2663,6 +3107,169 @@ function studentHome() {
 
     `;
 
+}
+
+
+/* =========================================================
+   ACCOUNT & SECURITY
+========================================================= */
+
+function accountPage() {
+
+    const profile = window.currentProfile || {};
+    const name = escapeHtml(profile.full_name || "User");
+    const studentId = escapeHtml(profile.student_id || "");
+    const initial = escapeHtml(
+        (profile.full_name || "U").trim().charAt(0).toUpperCase() || "U"
+    );
+
+    return `
+        <div class="hero">
+            <div class="pill gold">
+                🔐 ${state.language === "am" ? "የመለያ ደህንነት" : "ACCOUNT SECURITY"}
+            </div>
+            <h2>
+                ${state.language === "am" ? "የይለፍ ቃልዎን ይቀይሩ" : "Change your password"}
+            </h2>
+            <p>
+                ${state.language === "am"
+                    ? "የተሰጠዎትን ጊዜያዊ የይለፍ ቃል በራስዎ የሚያስታውሱት ደህንነታማ የይለፍ ቃል ይተኩ።"
+                    : "Replace your temporary password with a private password that only you know."}
+            </p>
+        </div>
+
+        <div class="card account-security-card" style="margin-top:16px; max-width:720px;">
+            <div class="row" style="align-items:flex-start; margin-bottom:18px;">
+                <div class="profile-circle" style="display:flex; width:58px; height:58px; flex:0 0 58px; border-radius:18px; font-size:20px;">
+                    ${initial}
+                </div>
+                <div>
+                    <div class="big" style="font-size:20px;">${name}</div>
+                    ${studentId ? `<div class="muted">${studentId}</div>` : ""}
+                </div>
+            </div>
+
+            <div id="change-password-message" class="account-message" style="display:none;"></div>
+
+            <form id="change-password-form" class="account-password-form">
+                <label for="current-password">
+                    ${state.language === "am" ? "የአሁኑ የይለፍ ቃል" : "Current password"}
+                </label>
+                <input id="current-password" type="password" autocomplete="current-password" minlength="6" required>
+
+                <label for="new-password">
+                    ${state.language === "am" ? "አዲስ የይለፍ ቃል" : "New password"}
+                </label>
+                <input id="new-password" type="password" autocomplete="new-password" minlength="8" required>
+
+                <label for="confirm-new-password">
+                    ${state.language === "am" ? "አዲሱን የይለፍ ቃል ያረጋግጡ" : "Confirm new password"}
+                </label>
+                <input id="confirm-new-password" type="password" autocomplete="new-password" minlength="8" required>
+
+                <div class="muted password-hint">
+                    ${state.language === "am"
+                        ? "ቢያንስ 8 ቁምፊ ያለው ጠንካራ የይለፍ ቃል ይጠቀሙ።"
+                        : "Use a strong password with at least 8 characters."}
+                </div>
+
+                <div class="row" style="justify-content:flex-end; margin-top:8px;">
+                    <button type="submit" class="btn primary" id="change-password-button">
+                        🔐 ${state.language === "am" ? "የይለፍ ቃል ቀይር" : "Change Password"}
+                    </button>
+                </div>
+            </form>
+        </div>
+    `;
+}
+
+
+async function changeAccountPassword(event) {
+
+    event.preventDefault();
+
+    const button = get("change-password-button");
+    const message = get("change-password-message");
+    const currentPassword = get("current-password")?.value || "";
+    const newPassword = get("new-password")?.value || "";
+    const confirmPassword = get("confirm-new-password")?.value || "";
+
+    const setMessage = (text, isError = true) => {
+        if (!message) return;
+        message.textContent = text;
+        message.style.display = "block";
+        message.classList.toggle("success", !isError);
+    };
+
+    if (!supabaseClient || !window.currentUser) {
+        setMessage("❌ You are not authenticated.");
+        return;
+    }
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+        setMessage("⚠️ Please fill in all password fields.");
+        return;
+    }
+
+    if (newPassword.length < 8) {
+        setMessage("⚠️ New password must be at least 8 characters.");
+        return;
+    }
+
+    if (newPassword !== confirmPassword) {
+        setMessage("⚠️ The new passwords do not match.");
+        return;
+    }
+
+    if (currentPassword === newPassword) {
+        setMessage("⚠️ Your new password must be different from the current password.");
+        return;
+    }
+
+    if (button) {
+        button.disabled = true;
+        button.textContent = "Changing...";
+    }
+
+    try {
+        const { error } = await supabaseClient.auth.updateUser({
+            password: newPassword,
+            current_password: currentPassword
+        });
+
+        if (error) throw error;
+        if (
+    window.currentProfile?.role === "student" &&
+    window.currentUser &&
+    window.currentProfile?.student_id
+) {
+
+    await saveOfflineStudentCredentials(
+        window.currentProfile.student_id,
+        newPassword,
+        window.currentUser,
+        window.currentProfile
+    );
+
+}
+
+        const form = get("change-password-form");
+        if (form) form.reset();
+
+        setMessage("✅ Password changed successfully! Your new password is now active.", false);
+        showToast("✅ Password changed successfully.");
+
+    } catch (error) {
+        console.error("❌ Password change failed:", error);
+        setMessage("❌ " + (error?.message || "Password change failed. Check your current password and try again."));
+    } finally {
+        if (button) {
+            button.disabled = false;
+            button.textContent = state.language === "am"
+                ? "🔐 የይለፍ ቃል ቀይር"
+                : "🔐 Change Password";
+        }
+    }
 }
 
 
@@ -3325,9 +3932,40 @@ async function mentorAttendancePage() {
 
 
             <div
-                class="list"
-                style="margin-top:18px;"
-            >
+    class="row"
+    style="
+        margin-top:18px;
+        gap:10px;
+        flex-wrap:wrap;
+    "
+>
+
+    <input
+        id="teacher-attendance-search"
+        type="search"
+        placeholder="🔎 Search student..."
+        style="
+            flex:1;
+            min-width:220px;
+        "
+    >
+
+    <button
+        type="button"
+        class="btn primary"
+        id="teacher-attendance-search-button"
+    >
+        🔎 Search
+    </button>
+
+</div>
+
+
+<div
+    class="list"
+    id="teacher-attendance-list"
+    style="margin-top:14px;"
+>
 
                 ${
                     state.mentorAttendanceStudents.length
@@ -3353,8 +3991,16 @@ async function mentorAttendancePage() {
                                     return `
 
                                         <div
-                                            class="list-item"
-                                        >
+    class="list-item"
+    data-search="${escapeHtml(
+        [
+            profile.full_name,
+            profile.student_id
+        ]
+            .filter(Boolean)
+            .join(" ")
+    )}"
+>
 
                                             <div
                                                 class="row space"
@@ -5414,10 +6060,41 @@ function mentorStudentsPage() {
             </div>
 
 
-            <div
-                class="list"
-                style="margin-top:18px;"
-            >
+           <div
+    class="row"
+    style="
+        margin-top:18px;
+        gap:10px;
+        flex-wrap:wrap;
+    "
+>
+
+    <input
+        id="teacher-students-search"
+        type="search"
+        placeholder="🔎 Search student..."
+        style="
+            flex:1;
+            min-width:220px;
+        "
+    >
+
+    <button
+        type="button"
+        class="btn primary"
+        id="teacher-students-search-button"
+    >
+        🔎 Search
+    </button>
+
+</div>
+
+
+<div
+    class="list"
+    id="teacher-students-list"
+    style="margin-top:14px;"
+>
 
                 ${
                     students.length
@@ -5437,8 +6114,18 @@ function mentorStudentsPage() {
                                     return `
 
                                         <div
-                                            class="list-item"
-                                        >
+    class="list-item"
+    data-search="${escapeHtml(
+        [
+            profile.full_name,
+            profile.student_id,
+            profile.phone,
+            classroom.name
+        ]
+            .filter(Boolean)
+            .join(" ")
+    )}"
+>
 
                                             <div
                                                 class="row space"
@@ -6744,17 +7431,53 @@ async function leaderboardPage() {
 
         <div class="card">
 
-            ${
-                rows.length
+    ${
+        state.role === "mentor"
+            ? `
+                <div
+                    class="row"
+                    style="
+                        margin-bottom:16px;
+                        gap:10px;
+                        flex-wrap:wrap;
+                    "
+                >
+
+                    <input
+                        id="teacher-leaderboard-search"
+                        type="search"
+                        placeholder="🔎 Search student..."
+                        style="
+                            flex:1;
+                            min-width:220px;
+                        "
+                    >
+
+                    <button
+                        type="button"
+                        class="btn primary"
+                        id="teacher-leaderboard-search-button"
+                    >
+                        🔎 Search
+                    </button>
+
+                </div>
+            `
+            : ""
+    }
+
+    ${
+        rows.length
 
                     ? `
 
                         <div
-                            style="
-                                display:grid;
-                                gap:10px;
-                            "
-                        >
+    id="teacher-leaderboard-list"
+    style="
+        display:grid;
+        gap:10px;
+    "
+>
 
                             ${rows.map(
                                 row => {
@@ -6793,9 +7516,17 @@ async function leaderboardPage() {
                                     return `
 
                                         <div
-                                            class="list-item"
-                                            style="
-                                                padding:16px;
+    class="list-item"
+    data-search="${escapeHtml(
+        [
+            row.full_name,
+            row.public_student_id
+        ]
+            .filter(Boolean)
+            .join(" ")
+    )}"
+    style="
+        padding:16px;
                                                 border:${
                                                     isMe
                                                         ? "1px solid rgba(213,173,81,.45)"
@@ -7101,6 +7832,13 @@ async function renderPage() {
 
                 break;
 
+            case "account":
+
+                html =
+                    accountPage();
+
+                break;
+
 
             default:
 
@@ -7223,6 +7961,13 @@ async function renderPage() {
 
                 html =
                     mentorCertificatesPage();
+
+                break;
+
+            case "account":
+
+                html =
+                    accountPage();
 
                 break;
 
@@ -10284,8 +11029,92 @@ if (announcementAudioPreview) {
         );
     }
 }
-function bindPageActions() {
+function setupTeacherSearch(
+    inputId,
+    buttonId,
+    listSelector
+) {
 
+    const input = get(inputId);
+    const button = get(buttonId);
+
+    if (!input || !button) {
+        return;
+    }
+
+    const performSearch = () => {
+
+        const query =
+            input.value
+                .trim()
+                .toLowerCase();
+
+        document
+            .querySelectorAll(listSelector)
+            .forEach(item => {
+
+                const text =
+                    (
+                        item.dataset.search ||
+                        item.textContent ||
+                        ""
+                    ).toLowerCase();
+
+                item.style.display =
+                    !query || text.includes(query)
+                        ? ""
+                        : "none";
+
+            });
+
+    };
+
+    button.addEventListener(
+        "click",
+        performSearch
+    );
+
+    input.addEventListener(
+        "keydown",
+        event => {
+
+            if (event.key === "Enter") {
+
+                event.preventDefault();
+
+                performSearch();
+
+            }
+
+        }
+    );
+
+}
+function bindPageActions() {
+    setupTeacherSearch(
+    "teacher-students-search",
+    "teacher-students-search-button",
+    "#teacher-students-list .list-item"
+);
+setupTeacherSearch(
+    "teacher-attendance-search",
+    "teacher-attendance-search-button",
+    "#teacher-attendance-list .list-item"
+);
+setupTeacherSearch(
+    "teacher-leaderboard-search",
+    "teacher-leaderboard-search-button",
+    "#teacher-leaderboard-list .list-item"
+);
+
+    const changePasswordForm = get("change-password-form");
+
+    if (changePasswordForm) {
+        changePasswordForm.addEventListener(
+            "submit",
+            changeAccountPassword
+        );
+    }
 
     document
         .querySelectorAll("[data-go]")
@@ -11977,6 +12806,9 @@ if (logoutButton) {
 
             const { error } =
                 await supabaseClient.auth.signOut();
+                localStorage.removeItem(
+    OFFLINE_STUDENT_KEY
+);
 
             if (error) {
                 throw error;
@@ -12034,6 +12866,9 @@ if (mobileLogoutButton) {
 
                 const { error } =
                     await supabaseClient.auth.signOut();
+                    localStorage.removeItem(
+    OFFLINE_STUDENT_KEY
+);
 
 
                 if (error) {
@@ -12322,7 +13157,8 @@ async function render() {
             "attendance",
             "assignments",
             "announcements",
-            "certificates"
+            "certificates",
+            "account"
         ];
 
         if (!studentPages.includes(state.page)) {
@@ -12341,7 +13177,8 @@ async function render() {
     "assignments",
     "announcements",
     "lessons",
-    "certificates"
+    "certificates",
+    "account"
 ];
 
         if (!mentorPages.includes(state.page)) {
